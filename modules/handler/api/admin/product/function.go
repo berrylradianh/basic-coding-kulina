@@ -64,7 +64,7 @@ func (h *ProductHandler) GetAllProduct(c echo.Context) error {
 		}
 
 		productResponse := ep.ProductResponse{
-			ProductId:       product.ProductId,
+			ID:              product.ID,
 			Name:            product.Name,
 			Category:        product.ProductCategory.Category,
 			Stock:           product.Stock,
@@ -106,7 +106,7 @@ func (h *ProductHandler) GetProductByID(c echo.Context) error {
 	}
 
 	productResponse := ep.ProductResponse{
-		ProductId:       product.ProductId,
+		ID:              product.ID,
 		Name:            product.Name,
 		Category:        product.ProductCategory.Category,
 		Stock:           product.Stock,
@@ -175,7 +175,7 @@ func (h *ProductHandler) SearchProduct(c echo.Context) error {
 			}
 
 			productResponse := ep.ProductResponse{
-				ProductId:       product.ProductId,
+				ID:              product.ID,
 				Name:            product.Name,
 				Category:        product.ProductCategory.Category,
 				Stock:           product.Stock,
@@ -201,21 +201,14 @@ func (h *ProductHandler) SearchProduct(c echo.Context) error {
 
 func (h *ProductHandler) CreateProduct(c echo.Context) error {
 	var product ep.Product
-	productCategoryIDstr := c.FormValue("ProductCategoryId")
-	if productCategoryIDstr == "" {
+	productCategoryID := c.FormValue("ProductCategoryId")
+	if productCategoryID == "" {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"Message": "Field/gambar tidak boleh kosong",
 			"Status":  http.StatusBadRequest,
 		})
 	} else {
-		productCategoryID, err := strconv.ParseUint(productCategoryIDstr, 10, 64)
-		if err != nil {
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"Message": "Invalid product category ID",
-				"Status":  http.StatusBadRequest,
-			})
-		}
-		product.ProductCategoryId = uint(productCategoryID)
+		product.ID = productCategoryID
 	}
 
 	name := c.FormValue("Name")
@@ -333,7 +326,7 @@ func (h *ProductHandler) CreateProduct(c echo.Context) error {
 			PhotoUrl, _ := cloudstorage.UploadToBucket(c.Request().Context(), fileHeader)
 
 			productImage := ep.ProductImage{
-				ProductId:       product.ProductId,
+				ID:              product.ID,
 				ProductImageUrl: PhotoUrl,
 			}
 			err = h.productUseCase.CreateProductImage(&productImage)
@@ -379,18 +372,11 @@ func (h *ProductHandler) UpdateProduct(c echo.Context) error {
 		})
 	}
 
-	productCategoryIDstr := c.FormValue("ProductCategoryId")
-	if productCategoryIDstr == "" {
+	productCategoryID := c.FormValue("ProductCategoryId")
+	if productCategoryID == "" {
 		req.ProductCategoryId = productBefore.ProductCategoryId
 	} else {
-		productCategoryID, err := strconv.ParseUint(productCategoryIDstr, 10, 64)
-		if err != nil {
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"Message": "Invalid product category ID",
-				"Status":  http.StatusBadRequest,
-			})
-		}
-		req.ProductCategoryId = uint(productCategoryID)
+		req.ProductCategoryId = productCategoryID
 	}
 
 	weightStr := c.FormValue("Weight")

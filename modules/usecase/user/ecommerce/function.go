@@ -18,7 +18,7 @@ func (ec *ecommerceUseCase) GetProductEcommerce(products *[]ep.Product, offset, 
 	}
 
 	for _, product := range *products {
-		productImages, err := ec.ecommerceRepo.GetProductImageURLById(fmt.Sprint(product.ProductId), &productImage)
+		productImages, err := ec.ecommerceRepo.GetProductImageURLById(fmt.Sprint(product.ID), &productImage)
 		if err != nil {
 			return &productResponses, count, err
 		}
@@ -28,14 +28,14 @@ func (ec *ecommerceUseCase) GetProductEcommerce(products *[]ep.Product, offset, 
 			productImageURLs = append(productImageURLs, image.ProductImageUrl)
 		}
 
-		exist, reviews, err := ec.ecommerceRepo.GetProductByID(product.ProductId)
+		exist, reviews, err := ec.ecommerceRepo.GetProductByID(product.ID)
 		if err != nil {
 			return &productResponses, count, err
 		}
 
 		var avgRating float64
 		if exist {
-			avgRating, err = ec.ecommerceRepo.AvgRating(product.ProductId)
+			avgRating, err = ec.ecommerceRepo.AvgRating(product.ID)
 			if err != nil {
 				return &productResponses, count, err
 			}
@@ -44,7 +44,7 @@ func (ec *ecommerceUseCase) GetProductEcommerce(products *[]ep.Product, offset, 
 		}
 
 		productResponse := ee.ProductResponse{
-			ProductId:       product.ProductId,
+			ProductId:       product.ID,
 			Name:            product.Name,
 			Category:        product.ProductCategory.Category,
 			Stock:           int(product.Stock),

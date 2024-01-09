@@ -1,13 +1,18 @@
 package product
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type ProductCategory struct {
-	*gorm.Model `json:"-"`
-
-	ID       uint      `json:"Id,omitempty" gorm:"primary_key"`
-	Category string    `json:"Category" form:"category" validate:"required"`
-	Products []Product `gorm:"foreignKey:ProductCategoryId"`
+	ID        string `gorm:"type:text;primaryKey"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+	Category  string         `json:"Category" form:"category" validate:"required"`
+	Products  []Product      `gorm:"foreignKey:ProductCategoryId"`
 }
 
 type ProductCategoryResponse struct {

@@ -9,10 +9,10 @@ import (
 )
 
 type Product struct {
-	ProductId          string                 `gorm:"primarykey" json:"ProductId"`
-	CreatedAt          time.Time              `json:"-"`
-	UpdatedAt          *time.Time             `json:"-"`
-	DeletedAt          *gorm.DeletedAt        `json:"-"`
+	ID                 string `gorm:"type:text;primaryKey"`
+	CreatedAt          time.Time
+	UpdatedAt          time.Time
+	DeletedAt          gorm.DeletedAt         `gorm:"index"`
 	Name               string                 `validate:"required,max=10"`
 	Stock              uint                   `validate:"required"`
 	Price              float64                `validate:"required"`
@@ -20,14 +20,14 @@ type Product struct {
 	Weight             float64                `validate:"required"`
 	Rating             float64                `validate:"required"`
 	Description        string                 `validate:"required"`
-	ProductCategoryId  uint                   `json:"-" validate:"required"`
+	ProductCategoryId  string                 `json:"-" validate:"required"`
 	ProductCategory    ProductCategory        `gorm:"foreignKey:ProductCategoryId" json:"-"`
 	ProductImages      []ProductImage         `gorm:"foreignKey:ProductId"`
 	TransactionDetails []et.TransactionDetail `gorm:"foreignKey:ProductId"`
 }
 
 type ProductRequest struct {
-	ProductCategoryId uint     `json:"productCategoryId" form:"productCategoryId"`
+	ProductCategoryId string   `json:"productCategoryId" form:"productCategoryId"`
 	Name              string   `json:"name" form:"name"`
 	Stock             uint     `json:"stock" form:"stock"`
 	Price             float64  `json:"price" form:"price"`
@@ -38,7 +38,7 @@ type ProductRequest struct {
 }
 
 type ProductResponse struct {
-	ProductId       string
+	ID              string
 	Name            string
 	Category        string
 	Stock           uint
