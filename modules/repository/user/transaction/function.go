@@ -9,7 +9,7 @@ import (
 	ue "basic-coding-kulina/modules/entity/user"
 )
 
-func (tr *transactionRepo) GetUserById(id uint) (*ue.User, error) {
+func (tr *transactionRepo) GetUserById(id string) (*ue.User, error) {
 	user := &ue.User{}
 	err := tr.db.Where("id = ?", id).First(&user).Error
 	if err != nil {
@@ -56,7 +56,7 @@ func (tr *transactionRepo) UpdateTransaction(updateData et.Transaction) error {
 	return nil
 }
 
-func (tr *transactionRepo) GetPoint(id uint) (uint, error) {
+func (tr *transactionRepo) GetPoint(id string) (uint, error) {
 	var userDetail eu.UserDetail
 
 	if err := tr.db.Where("user_id = ?", id).First(&userDetail).Error; err != nil {
@@ -65,7 +65,6 @@ func (tr *transactionRepo) GetPoint(id uint) (uint, error) {
 	point := userDetail.Point
 
 	return point, nil
-
 }
 func (tr *transactionRepo) GetPaymentStatus(id string) (string, error) {
 	var transaction et.Transaction
@@ -91,7 +90,7 @@ func (tr *transactionRepo) GetStock(id string) (uint, error) {
 
 }
 
-func (tr *transactionRepo) UpdatePoint(id uint, point uint) error {
+func (tr *transactionRepo) UpdatePoint(id string, point uint) error {
 
 	err := tr.db.Model(&eu.UserDetail{}).Where("user_id = ?", id).Update("point", point).Error
 	if err != nil {

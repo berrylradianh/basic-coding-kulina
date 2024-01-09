@@ -228,8 +228,8 @@ func (ph *ProfileHandler) CreateAddressProfile(c echo.Context) error {
 	var address ut.UserAddress
 
 	var claims = midjwt.GetClaims2(c)
-	var userId = claims["user_id"].(float64)
-	address.UserId = uint(userId)
+	var userId = claims["user_id"].(string)
+	address.UserId = userId
 
 	if err := c.Bind(&address); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -258,7 +258,7 @@ func (ph *ProfileHandler) CreateAddressProfile(c echo.Context) error {
 	}
 
 	if address.IsPrimary {
-		if err := ph.profileUsecase.UpdateAddressPrimaryProfile(&address, int(address.UserId)); err != nil {
+		if err := ph.profileUsecase.UpdateAddressPrimaryProfile(&address, address.UserId); err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 				"Message": "Gagal mengubah alamat utama",
 				"Status":  http.StatusInternalServerError,
@@ -350,8 +350,8 @@ func (ph *ProfileHandler) UpdateAddressProfile(c echo.Context) error {
 	var addressRequest ut.UserAddressRequest
 
 	var claims = midjwt.GetClaims2(c)
-	var userId = claims["user_id"].(float64)
-	address.UserId = uint(userId)
+	var userId = claims["user_id"].(string)
+	address.UserId = userId
 
 	idAddress, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -361,7 +361,7 @@ func (ph *ProfileHandler) UpdateAddressProfile(c echo.Context) error {
 		})
 	}
 
-	if err := ph.profileUsecase.GetAddressByIdProfile(&address, int(address.UserId), idAddress); err != nil {
+	if err := ph.profileUsecase.GetAddressByIdProfile(&address, address.UserId, idAddress); err != nil {
 		return c.JSON(http.StatusNotFound, map[string]interface{}{
 			"Message": "Gagal mendapatkan alamat",
 			"Status":  http.StatusNotFound,
@@ -399,7 +399,7 @@ func (ph *ProfileHandler) UpdateAddressProfile(c echo.Context) error {
 	}
 
 	if addressRequest.IsPrimary {
-		if err := ph.profileUsecase.UpdateAddressPrimaryProfile(&address, int(address.UserId)); err != nil {
+		if err := ph.profileUsecase.UpdateAddressPrimaryProfile(&address, address.UserId); err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 				"Message": "Gagal mengubah alamat utama",
 				"Status":  http.StatusInternalServerError,
@@ -410,7 +410,7 @@ func (ph *ProfileHandler) UpdateAddressProfile(c echo.Context) error {
 		addressRequest.IsPrimary = false
 	}
 
-	if err := ph.profileUsecase.UpdateAddressByIdProfile(&addressRequest, int(address.UserId), idAddress); err != nil {
+	if err := ph.profileUsecase.UpdateAddressByIdProfile(&addressRequest, address.UserId, idAddress); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"Message": "Gagal mengubah alamat",
 			"Status":  http.StatusInternalServerError,

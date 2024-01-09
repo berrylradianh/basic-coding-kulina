@@ -7,25 +7,25 @@ import (
 func CreateUserDetail() []*ue.UserDetail {
 	userDetail := []*ue.UserDetail{
 		{
-			Name:         "Administrator",
+			Name:         "Supplier",
 			Point:        0,
 			Phone:        "08917283129283",
 			ProfilePhoto: "https://storage.googleapis.com/ecowave/img/users/profile/profile.png",
-			UserId:       1,
+			UserId:       "6c8bcb83-a825-4df0-8c29-264402205b9b",
 		},
 		{
 			Name:         "User 1",
 			Point:        0,
 			Phone:        "08917283109283",
 			ProfilePhoto: "https://storage.googleapis.com/ecowave/img/users/profile/profile.png",
-			UserId:       2,
+			UserId:       "c7668a02-f1bd-4ebb-bf30-aaeebfedc16b",
 		},
 		{
 			Name:         "User 2",
 			Point:        0,
 			Phone:        "0851728392716",
 			ProfilePhoto: "https://storage.googleapis.com/ecowave/img/users/profile/profile.png",
-			UserId:       3,
+			UserId:       "41fb3d71-33bc-4a6e-9620-2d56f3090981",
 		},
 	}
 

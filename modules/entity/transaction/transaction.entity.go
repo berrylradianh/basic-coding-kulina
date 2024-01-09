@@ -9,9 +9,8 @@ import (
 type Transaction struct {
 	*gorm.Model
 
-	UserId             uint `validate:"required"`
-	VoucherId          uint `json:"VoucherId" form:"VoucherId"`
-	AddressId          uint `json:"AddressId" form:"AddressId" validate:"required"`
+	UserId             string `validate:"required"`
+	AddressId          string `json:"AddressId" form:"AddressId" validate:"required"`
 	StatusTransaction  string
 	ReceiptNumber      string
 	TransactionId      string  `validate:"required"`
@@ -42,7 +41,6 @@ type TransactionResponse struct {
 
 type TransactionDetailResponse struct {
 	Address            string
-	Voucher            string
 	Name               string
 	PhoneNumber        string
 	ReceiptNumber      string

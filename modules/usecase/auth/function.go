@@ -32,28 +32,28 @@ func (ac *authUsecase) Register(request *ue.RegisterRequest) error {
 	return nil
 }
 
-func (ac *authUsecase) Login(request *ue.LoginRequest) (interface{}, uint, error) {
+func (ac *authUsecase) Login(request *ue.LoginRequest) (interface{}, string, error) {
 	if err := vld.Validation(request); err != nil {
-		return nil, 0, err
+		return nil, "", err
 	}
 
 	response, password, role, err := ac.authRepo.Login(request.Email)
 
 	if err != nil {
 		//lint:ignore ST1005 Reason for ignoring this linter
-		return nil, 0, errors.New("Email atau password salah")
+		return nil, "", errors.New("Email atau password salah")
 	}
 
 	err = pw.VerifyPassword(password, request.Password)
 	if err != nil {
 
 		//lint:ignore ST1005 Reason for ignoring this linter
-		return nil, 0, errors.New("Email atau password salah")
+		return nil, "", errors.New("Email atau password salah")
 	}
 
-	token, err := jwt.CreateToken(int(response.ID), response.Email)
+	token, err := jwt.CreateToken(response.ID, response.Email)
 	if err != nil {
-		return nil, 0, err
+		return nil, "", err
 	}
 	response.Token = token
 
@@ -71,7 +71,7 @@ func (ac *authUsecase) ForgotPassword(request ue.ForgotPassRequest) (string, err
 		return "", errors.New("Email tidak ditemukan")
 	}
 
-	if user.RoleId == 1 {
+	if user.RoleId == "419a8a2d-0abe-4413-ac49-39d33cf9838d" {
 		return "", errors.New("Tidak diperbolehkan merubah data admin")
 	}
 

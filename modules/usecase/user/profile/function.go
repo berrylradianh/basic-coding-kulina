@@ -41,15 +41,15 @@ func (pc *profileUsecase) GetAllAddressProfile(address *[]ut.UserAddress, idUser
 	return pc.profileRepo.GetAllAddressProfile(address, idUser, offset, pageSize)
 }
 
-func (pc *profileUsecase) GetAddressByIdProfile(address *ut.UserAddress, idUser int, idAddress int) error {
+func (pc *profileUsecase) GetAddressByIdProfile(address *ut.UserAddress, idUser string, idAddress int) error {
 	return pc.profileRepo.GetAddressByIdProfile(address, idUser, idAddress)
 }
 
-func (pc *profileUsecase) UpdateAddressPrimaryProfile(address *ut.UserAddress, idUser int) error {
+func (pc *profileUsecase) UpdateAddressPrimaryProfile(address *ut.UserAddress, idUser string) error {
 	return pc.profileRepo.UpdateAddressPrimaryProfile(address, idUser)
 }
 
-func (pc *profileUsecase) UpdateAddressByIdProfile(addressRequest *ut.UserAddressRequest, idUser int, idAddress int) error {
+func (pc *profileUsecase) UpdateAddressByIdProfile(addressRequest *ut.UserAddressRequest, idUser string, idAddress int) error {
 	return pc.profileRepo.UpdateAddressByIdProfile(addressRequest, idUser, idAddress)
 }
 

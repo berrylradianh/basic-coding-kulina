@@ -74,7 +74,7 @@ func (pr *profileRepo) GetAllAddressProfile(address *[]ut.UserAddress, idUser, o
 	return address, count, nil
 }
 
-func (pr *profileRepo) GetAddressByIdProfile(address *ut.UserAddress, idUser int, idAddress int) error {
+func (pr *profileRepo) GetAddressByIdProfile(address *ut.UserAddress, idUser string, idAddress int) error {
 	if err := pr.db.Where("user_id = ? AND id = ?", idUser, idAddress).First(&address).Error; err != nil {
 		return err
 	}
@@ -82,7 +82,7 @@ func (pr *profileRepo) GetAddressByIdProfile(address *ut.UserAddress, idUser int
 	return nil
 }
 
-func (pr *profileRepo) UpdateAddressPrimaryProfile(address *ut.UserAddress, idUser int) error {
+func (pr *profileRepo) UpdateAddressPrimaryProfile(address *ut.UserAddress, idUser string) error {
 	if err := pr.db.Raw("UPDATE user_addresses SET is_primary = false WHERE user_id = ?", idUser).Scan(&address).Error; err != nil {
 		return err
 	}
@@ -90,7 +90,7 @@ func (pr *profileRepo) UpdateAddressPrimaryProfile(address *ut.UserAddress, idUs
 	return nil
 }
 
-func (pr *profileRepo) UpdateAddressByIdProfile(addressRequest *ut.UserAddressRequest, idUser int, idAddress int) error {
+func (pr *profileRepo) UpdateAddressByIdProfile(addressRequest *ut.UserAddressRequest, idUser string, idAddress int) error {
 	var address ut.UserAddress
 
 	if err := pr.db.Model(address).Where("user_id = ? AND id = ?", idUser, idAddress).Updates(&addressRequest).Error; err != nil {

@@ -3,8 +3,8 @@ package user
 import "time"
 
 type UserRecovery struct {
-	ID        uint `gorm:"primarykey"`
-	UserId    uint
+	ID        string `gorm:"primarykey"`
+	UserId    string
 	Code      string
 	CreatedAt time.Time
 }

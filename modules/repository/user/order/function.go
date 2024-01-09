@@ -7,7 +7,7 @@ import (
 	eu "basic-coding-kulina/modules/entity/user"
 )
 
-func (or *orderRepo) GetOrder(filter string, idUser uint, offset int, pageSize int) (interface{}, int64, error) {
+func (or *orderRepo) GetOrder(filter string, idUser string, offset int, pageSize int) (interface{}, int64, error) {
 	var transaction []et.Transaction
 	var order []eo.Order
 	var address eu.UserAddress
@@ -58,7 +58,6 @@ func (or *orderRepo) GetOrder(filter string, idUser uint, offset int, pageSize i
 			PaymentMethod:      val.PaymentMethod,
 			PaymentStatus:      val.PaymentStatus,
 			ExpeditionName:     val.ExpeditionName,
-			VoucherId:          val.VoucherId,
 			Discount:           val.Discount,
 			TotalPrice:         val.TotalPrice,
 			CanceledReason:     val.CanceledReason,

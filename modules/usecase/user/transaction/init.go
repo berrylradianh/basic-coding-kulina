@@ -9,7 +9,7 @@ import (
 
 type TransactionUsecase interface {
 	CreateTransaction(transaction *et.Transaction) (string, string, error)
-	GetPoint(id uint) (interface{}, error)
+	GetPoint(id string) (interface{}, error)
 	MidtransNotifications(midtransRequest *em.MidtransRequest) error
 	GetPaymentStatus(id string) (string, error)
 	ShippingOptions(ship *er.RajaongkirRequest) (interface{}, error)

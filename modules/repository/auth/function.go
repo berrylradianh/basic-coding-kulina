@@ -3,6 +3,7 @@ package auth
 import (
 	"errors"
 
+	re "basic-coding-kulina/modules/entity/role"
 	ue "basic-coding-kulina/modules/entity/user"
 )
 
@@ -15,11 +16,11 @@ func (ar *authRepo) GetUserByEmail(email string) (*ue.User, error) {
 
 	return user, nil
 }
-func (ar *authRepo) Login(email string) (*ue.AuthResponse, string, uint, error) {
+func (ar *authRepo) Login(email string) (*ue.AuthResponse, string, string, error) {
 	user := &ue.User{}
 	err := ar.db.Preload("UserAddresses").Preload("UserDetail").Where("email = ?", email).First(&user).Error
 	if err != nil {
-		return nil, "", 0, errors.New("Record Not Found")
+		return nil, "", "", errors.New("Record Not Found")
 	}
 
 	var address ue.UserAddress
@@ -50,8 +51,13 @@ func (ar *authRepo) CreateUser(user *ue.RegisterRequest) error {
 		return errors.New("Email already exists")
 	}
 
+	var role re.Role
+	if err := ar.db.Where("role = ?", "User").First(&role).Error; err != nil {
+		return err
+	}
+
 	userTable := ue.User{
-		RoleId:   2,
+		RoleId:   role.Role,
 		Email:    user.Email,
 		Username: user.Username,
 		Password: user.Password,
@@ -66,7 +72,7 @@ func (ar *authRepo) CreateUser(user *ue.RegisterRequest) error {
 	}
 	return nil
 }
-func (ar *authRepo) GetUserRecovery(userId uint) (ue.UserRecovery, error) {
+func (ar *authRepo) GetUserRecovery(userId string) (ue.UserRecovery, error) {
 	var recovery ue.UserRecovery
 	err := ar.db.Where("user_id = ?", userId).First(&recovery).Error
 	if err != nil {
@@ -76,7 +82,7 @@ func (ar *authRepo) GetUserRecovery(userId uint) (ue.UserRecovery, error) {
 	return recovery, nil
 }
 
-func (ar *authRepo) UserRecovery(userId uint, codeVer string) error {
+func (ar *authRepo) UserRecovery(userId string, codeVer string) error {
 
 	userRecover := ue.UserRecovery{
 		UserId: userId,
@@ -88,7 +94,7 @@ func (ar *authRepo) UserRecovery(userId uint, codeVer string) error {
 
 	return nil
 }
-func (ar *authRepo) UpdateUserRecovery(userId uint, codeVer string) error {
+func (ar *authRepo) UpdateUserRecovery(userId string, codeVer string) error {
 
 	userRecover := ue.UserRecovery{
 		UserId: userId,
@@ -120,7 +126,7 @@ func (ar *authRepo) ChangePassword(user ue.RecoveryRequest) error {
 
 	return nil
 }
-func (ar *authRepo) DeleteUserRecovery(userId uint) error {
+func (ar *authRepo) DeleteUserRecovery(userId string) error {
 
 	var userRecovery ue.UserRecovery
 	result := ar.db.Where("user_id = ?", userId).Delete(&userRecovery)

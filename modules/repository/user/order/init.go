@@ -7,7 +7,7 @@ import (
 )
 
 type OrderRepo interface {
-	GetOrder(filter string, idUser uint, offset int, pageSize int) (interface{}, int64, error)
+	GetOrder(filter string, idUser string, offset int, pageSize int) (interface{}, int64, error)
 	// OrderDetail(id uint) (et.Transaction, error)
 	// GetNameProductandImageUrl(id uint) (string, string, error)
 	// GetPromoName(id uint) (string, error)

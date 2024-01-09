@@ -30,16 +30,6 @@ func CreateMidtransUrl(transaction *et.Transaction) (string, error) {
 	}
 	iDetails = append(iDetails, shipping)
 
-	if transaction.VoucherId != 0 {
-		discount := midtrans.ItemDetails{
-			ID:    "discount",
-			Name:  "discount",
-			Qty:   1,
-			Price: -int64(transaction.Discount),
-		}
-		iDetails = append(iDetails, discount)
-	}
-
 	if transaction.Point != 0 {
 		point := midtrans.ItemDetails{
 			ID:    "point",

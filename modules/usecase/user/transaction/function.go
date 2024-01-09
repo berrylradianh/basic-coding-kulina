@@ -2,7 +2,6 @@ package transaction
 
 import (
 	"errors"
-	"strconv"
 	"time"
 
 	"basic-coding-kulina/helper/hash"
@@ -21,7 +20,7 @@ func (tu *transactionUsecase) CreateTransaction(transaction *et.Transaction) (st
 		return "", "", err
 	}
 
-	if user.RoleId == 1 {
+	if user.RoleId == "419a8a2d-0abe-4413-ac49-39d33cf9838d" {
 		//lint:ignore ST1005 Reason for ignoring this linter
 		return "", "", errors.New("Tidak boleh melakukan transaksi")
 	}
@@ -40,7 +39,7 @@ func (tu *transactionUsecase) CreateTransaction(transaction *et.Transaction) (st
 		productCost += cost.SubTotalPrice
 	}
 
-	transId := "eco" + strconv.FormatUint(uint64(transaction.UserId), 10) + time.Now().UTC().Format("2006010215040105")
+	transId := "eco" + transaction.UserId + time.Now().UTC().Format("2006010215040105")
 	transaction.TransactionId = transId
 	transaction.StatusTransaction = "Belum Bayar"
 	transaction.TotalProductPrice = productCost
@@ -124,7 +123,7 @@ func (tu *transactionUsecase) MidtransNotifications(midtransRequest *em.Midtrans
 
 	return nil
 }
-func (tu *transactionUsecase) GetPoint(id uint) (interface{}, error) {
+func (tu *transactionUsecase) GetPoint(id string) (interface{}, error) {
 
 	res, err := tu.transactionRepo.GetPoint(id)
 	if err != nil {

@@ -51,7 +51,7 @@ func (ah *AuthHandler) LoginUser() echo.HandlerFunc {
 			})
 		}
 
-		if role != 2 {
+		if role != "b29112fc-c7b5-4386-a31e-f2c040de7fcb" {
 			return c.JSON(http.StatusUnauthorized, echo.Map{
 				"Message": "Email atau password salah",
 				"Status":  http.StatusUnauthorized,
@@ -84,7 +84,7 @@ func (ah *AuthHandler) LoginAdmin() echo.HandlerFunc {
 			})
 		}
 
-		if role != 1 {
+		if role != "419a8a2d-0abe-4413-ac49-39d33cf9838d" {
 			return c.JSON(http.StatusUnauthorized, echo.Map{
 				"Message": "Email atau password salah",
 				"Status":  http.StatusUnauthorized,

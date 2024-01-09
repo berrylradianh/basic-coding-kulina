@@ -8,7 +8,7 @@ type UserDetail struct {
 	Point        uint   `json:"Point" form:"Point"`
 	Phone        string `json:"Phone" form:"Phone" validate:"required,min=10,max=13,numeric"`
 	ProfilePhoto string `json:"ProfilePhoto" form:"ProfilePhoto"`
-	UserId       uint   `json:"UserId" form:"UserId"`
+	UserId       string `json:"UserId" form:"UserId"`
 }
 
 type UserDetailRequest struct {

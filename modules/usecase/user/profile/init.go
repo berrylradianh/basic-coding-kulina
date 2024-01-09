@@ -15,9 +15,9 @@ type ProfileUsecase interface {
 	CreateAddressProfile(address *ut.UserAddress) error
 	GetAllAddressProfileNoPagination(address *[]ut.UserAddress, idUser int) error
 	GetAllAddressProfile(address *[]ut.UserAddress, idUser, offset, pageSize int) (*[]ut.UserAddress, int64, error)
-	GetAddressByIdProfile(address *ut.UserAddress, idUser int, idAddress int) error
-	UpdateAddressPrimaryProfile(address *ut.UserAddress, idUser int) error
-	UpdateAddressByIdProfile(addressRequest *ut.UserAddressRequest, idUser int, idAddress int) error
+	GetAddressByIdProfile(address *ut.UserAddress, idUser string, idAddress int) error
+	UpdateAddressPrimaryProfile(address *ut.UserAddress, idUser string) error
+	UpdateAddressByIdProfile(addressRequest *ut.UserAddressRequest, idUser string, idAddress int) error
 
 	UpdatePasswordProfile(user *ut.User, oldPassword string, newPassword string, id int) (string, error)
 

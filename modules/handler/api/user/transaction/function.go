@@ -18,7 +18,7 @@ func (th *TransactionHandler) CreateTransaction() echo.HandlerFunc {
 
 		transaction := et.Transaction{}
 		c.Bind(&transaction)
-		transaction.UserId = uint(id)
+		transaction.UserId = id
 
 		snapUrl, transactionId, err := th.transactionUsecase.CreateTransaction(&transaction)
 		if err != nil {

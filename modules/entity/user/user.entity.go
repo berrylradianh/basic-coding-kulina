@@ -2,13 +2,17 @@ package user
 
 import (
 	et "basic-coding-kulina/modules/entity/transaction"
+	"time"
 
 	"gorm.io/gorm"
 )
 
 type User struct {
-	*gorm.Model   `json:"-"`
-	RoleId        uint
+	ID            string `gorm:"type:text;primaryKey"`
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+	DeletedAt     gorm.DeletedAt `gorm:"index"`
+	RoleId        string
 	Email         string           `json:"Email" form:"Email" validate:"required,email"`
 	Username      string           `json:"Username" form:"Username" validate:"required"`
 	Password      string           `json:"Password" form:"Password" validate:"required,min=8"`
@@ -31,7 +35,7 @@ type LoginRequest struct {
 }
 
 type AuthResponse struct {
-	ID            uint   `json:"Id" form:"Id"`
+	ID            string `json:"Id" form:"Id"`
 	Email         string `json:"Email" form:"Email" validate:"required,email"`
 	Username      string `json:"Username" form:"Username" validate:"required"`
 	Name          string `json:"Name" form:"Name"`
@@ -59,8 +63,8 @@ type UserRequest struct {
 }
 
 type UserResponse struct {
-	Id           uint   `json:"Id"`
-	RoleId       uint   `json:"RoleId"`
+	Id           string `json:"Id"`
+	RoleId       string `json:"RoleId"`
 	Name         string `json:"Name"`
 	Username     string `json:"Username"`
 	Email        string `json:"Email"`

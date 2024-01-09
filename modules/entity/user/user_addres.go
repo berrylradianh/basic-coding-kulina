@@ -2,13 +2,17 @@ package user
 
 import (
 	et "basic-coding-kulina/modules/entity/transaction"
+	"time"
 
 	"gorm.io/gorm"
 )
 
 type UserAddress struct {
-	*gorm.Model  `json:"-"`
-	UserId       uint             `json:"UserId" form:"UserId"`
+	ID           string `gorm:"type:text;primaryKey"`
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+	DeletedAt    gorm.DeletedAt   `gorm:"index"`
+	UserId       string           `json:"UserId" form:"UserId"`
 	Recipient    string           `json:"Recipient" form:"Recipient" validate:"required"`
 	Phone        string           `json:"Phone" form:"Phone" validate:"required,min=10,max=13"`
 	ProvinceId   string           `json:"ProvinceId" form:"ProvinceId" validate:"required"`
@@ -33,11 +37,11 @@ type UserAddressRequest struct {
 	Note         string `json:"Note" form:"Note"`
 	Mark         string `json:"Mark" form:"Mark"`
 	IsPrimary    bool   `json:"IsPrimary" form:"IsPrimary"`
-	UserId       uint   `json:"UserId" form:"UserId"`
+	UserId       string `json:"UserId" form:"UserId"`
 }
 
 type UserAddressResponse struct {
-	Id           uint
+	Id           string
 	Recipient    string
 	Phone        string
 	ProvinceId   string

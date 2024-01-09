@@ -4,7 +4,7 @@ import (
 	"basic-coding-kulina/cmd/routes"
 	"basic-coding-kulina/common"
 
-	"basic-coding-kulina/database/mysql"
+	"basic-coding-kulina/database/psql"
 	authHandler "basic-coding-kulina/modules/handler/api/auth"
 	authRepo "basic-coding-kulina/modules/repository/auth"
 	authUsecase "basic-coding-kulina/modules/usecase/auth"
@@ -45,41 +45,41 @@ import (
 )
 
 func StartApp() *echo.Echo {
-	mysql.Init()
+	psql.Init()
 
-	authRepo := authRepo.New(mysql.DB)
+	authRepo := authRepo.New(psql.DB)
 	authUsecase := authUsecase.New(authRepo)
 	authHandler := authHandler.New(authUsecase)
 
-	productCategoryRepo := productCategoryRepo.New(mysql.DB)
+	productCategoryRepo := productCategoryRepo.New(psql.DB)
 	productCategoryUsecase := productCategoryUsecase.New(productCategoryRepo)
 	productCategoryHandler := productCategoryHandler.New(productCategoryUsecase)
 
-	productRepo := productRepo.New(mysql.DB)
+	productRepo := productRepo.New(psql.DB)
 	productUsecase := productUseCase.New(productRepo)
 	productHandler := productHandler.New(productUsecase)
 
-	ecommerceRepo := ecommerceRepo.New(mysql.DB)
+	ecommerceRepo := ecommerceRepo.New(psql.DB)
 	ecommerceUsecase := ecommerceUseCase.New(ecommerceRepo)
 	ecommerceHandler := ecommerceHandler.New(ecommerceUsecase)
 
-	profileRepo := profileRepo.New(mysql.DB)
+	profileRepo := profileRepo.New(psql.DB)
 	profileUsecase := profileUsecase.New(profileRepo)
 	profileHandler := profileHandler.New(profileUsecase)
 
-	transactionRepoUser := transactionRepoUser.New(mysql.DB)
+	transactionRepoUser := transactionRepoUser.New(psql.DB)
 	transactionUsecaseUser := transactionUsecaseUser.New(transactionRepoUser)
 	transactionHandlerUser := transactionHandlerUser.New(transactionUsecaseUser)
 
-	orderRepoUser := orderRepoUser.New(mysql.DB)
+	orderRepoUser := orderRepoUser.New(psql.DB)
 	orderUsecaseUser := orderUsecaseUser.New(orderRepoUser)
 	orderHandlerUser := orderHandlerUser.New(orderUsecaseUser)
 
-	orderRepoAdmin := orderRepoAdmin.New(mysql.DB)
+	orderRepoAdmin := orderRepoAdmin.New(psql.DB)
 	orderUsecaseAdmin := orderUsecaseAdmin.New(orderRepoAdmin)
 	orderHandlerAdmin := orderHandlerAdmin.New(orderUsecaseAdmin)
 
-	dashboardRepo := dashboardRepo.New(mysql.DB)
+	dashboardRepo := dashboardRepo.New(psql.DB)
 	dashboardUsecase := dashboardUsecase.New(dashboardRepo)
 	dashboardHandler := dashboardHandler.New(dashboardUsecase)
 

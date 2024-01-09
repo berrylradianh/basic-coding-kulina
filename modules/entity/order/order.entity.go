@@ -18,7 +18,7 @@ type Order struct {
 	TransactionId      string
 	CreatedAt          time.Time
 	UpdatedAt          time.Time
-	AddressId          uint
+	AddressId          string
 	StatusTransaction  string
 	ReceiptNumber      string
 	TotalProductPrice  float64

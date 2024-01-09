@@ -9,7 +9,7 @@ import (
 	eo "basic-coding-kulina/modules/entity/order"
 )
 
-func (oc *orderUsecase) GetOrder(filter string, idUser uint, offset int, pageSize int) (interface{}, int64, error) {
+func (oc *orderUsecase) GetOrder(filter string, idUser string, offset int, pageSize int) (interface{}, int64, error) {
 
 	filter = strings.Trim(filter, "%20")
 	res, count, err := oc.orderRepo.GetOrder(filter, idUser, offset, pageSize)

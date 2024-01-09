@@ -8,13 +8,13 @@ import (
 
 type AuthRepo interface {
 	GetUserByEmail(email string) (*ue.User, error)
-	Login(email string) (*ue.AuthResponse, string, uint, error)
+	Login(email string) (*ue.AuthResponse, string, string, error)
 	CreateUser(user *ue.RegisterRequest) error
-	UserRecovery(userId uint, codeVer string) error
-	UpdateUserRecovery(userId uint, codeVer string) error
-	GetUserRecovery(userId uint) (ue.UserRecovery, error)
+	UserRecovery(userId string, codeVer string) error
+	UpdateUserRecovery(userId string, codeVer string) error
+	GetUserRecovery(userId string) (ue.UserRecovery, error)
 	ChangePassword(user ue.RecoveryRequest) error
-	DeleteUserRecovery(userId uint) error
+	DeleteUserRecovery(userId string) error
 }
 
 type authRepo struct {

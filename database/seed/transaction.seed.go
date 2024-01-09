@@ -7,9 +7,8 @@ import (
 func CreateTransaction() []*et.Transaction {
 	transaction := []*et.Transaction{
 		{
-			UserId:             2,
-			VoucherId:          1,
-			AddressId:          2,
+			UserId:             "c7668a02-f1bd-4ebb-bf30-aaeebfedc16b",
+			AddressId:          "414354cc-45a5-47f6-879e-bfb4476eb0d6",
 			StatusTransaction:  "Belum Bayar",
 			ReceiptNumber:      "",
 			TransactionId:      "eco22023061514070654",
@@ -27,9 +26,8 @@ func CreateTransaction() []*et.Transaction {
 			CanceledReason:     "",
 		},
 		{
-			UserId:             2,
-			VoucherId:          1,
-			AddressId:          2,
+			UserId:             "c7668a02-f1bd-4ebb-bf30-aaeebfedc16b",
+			AddressId:          "414354cc-45a5-47f6-879e-bfb4476eb0d6",
 			StatusTransaction:  "Selesai",
 			ReceiptNumber:      "jne516541255500",
 			TransactionId:      "eco22023061514070655",
@@ -47,9 +45,8 @@ func CreateTransaction() []*et.Transaction {
 			CanceledReason:     "",
 		},
 		{
-			UserId:             2,
-			VoucherId:          1,
-			AddressId:          2,
+			UserId:             "c7668a02-f1bd-4ebb-bf30-aaeebfedc16b",
+			AddressId:          "414354cc-45a5-47f6-879e-bfb4476eb0d6",
 			StatusTransaction:  "Dikemas",
 			ReceiptNumber:      "",
 			TransactionId:      "eco22023061514070656",
@@ -67,9 +64,8 @@ func CreateTransaction() []*et.Transaction {
 			CanceledReason:     "",
 		},
 		{
-			UserId:             2,
-			VoucherId:          1,
-			AddressId:          2,
+			UserId:             "c7668a02-f1bd-4ebb-bf30-aaeebfedc16b",
+			AddressId:          "414354cc-45a5-47f6-879e-bfb4476eb0d6",
 			StatusTransaction:  "Dikirim",
 			ReceiptNumber:      "jne516541255501",
 			TransactionId:      "eco22023061514070657",
@@ -87,9 +83,8 @@ func CreateTransaction() []*et.Transaction {
 			CanceledReason:     "",
 		},
 		{
-			UserId:             2,
-			VoucherId:          1,
-			AddressId:          2,
+			UserId:             "c7668a02-f1bd-4ebb-bf30-aaeebfedc16b",
+			AddressId:          "414354cc-45a5-47f6-879e-bfb4476eb0d6",
 			StatusTransaction:  "Dibatalkan",
 			ReceiptNumber:      "",
 			TransactionId:      "eco22023061514070658",
