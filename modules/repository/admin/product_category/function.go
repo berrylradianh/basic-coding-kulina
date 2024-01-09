@@ -3,10 +3,12 @@ package product_category
 import (
 	pe "basic-coding-kulina/modules/entity/product"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
 func (pcr *productCategoryRepo) CreateProductCategory(productCategory *pe.ProductCategory) error {
+	productCategory.ID = uuid.New().String()
 	if err := pcr.db.Save(&productCategory).Error; err != nil {
 		return echo.NewHTTPError(500, err)
 	}
