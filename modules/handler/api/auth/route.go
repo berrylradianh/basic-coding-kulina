@@ -9,7 +9,4 @@ func (ah *AuthHandler) RegisterRoutes(e *echo.Echo) {
 	userGroup := e.Group("/user")
 	userGroup.POST("/register", ah.Register())
 	userGroup.POST("/login", ah.LoginUser())
-	userGroup.POST("/forgot-password", ah.ForgotPassword())
-	userGroup.POST("/verifikasi-otp", ah.VerifOtp())
-	userGroup.PUT("/change-password", ah.ChangePassword())
 }

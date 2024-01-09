@@ -423,55 +423,6 @@ func (ph *ProfileHandler) UpdateAddressProfile(c echo.Context) error {
 	})
 }
 
-func (ph *ProfileHandler) UpdatePasswordProfile(c echo.Context) error {
-	var user ut.User
-	var userPassword ut.UserPasswordRequest
-
-	var claims = midjwt.GetClaims2(c)
-	var userId = claims["user_id"].(float64)
-
-	if err := ph.profileUsecase.GetUserProfile(&user, int(userId)); err != nil {
-		return c.JSON(http.StatusNotFound, map[string]interface{}{
-			"Message": "Gagal mendapatkan profil",
-			"Status":  http.StatusNotFound,
-		})
-	}
-
-	if err := c.Bind(&userPassword); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"Message": "Gagal",
-			"Status":  http.StatusBadRequest,
-		})
-	}
-
-	if len(userPassword.Password) < 8 {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"Message": "Password harus mengandung minimal 8 karakter",
-			"Status":  http.StatusInternalServerError,
-		})
-	}
-
-	if userPassword.Password != userPassword.ConfirmNewPassword {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"Message": "Password tidak cocok",
-			"Status":  http.StatusInternalServerError,
-		})
-	}
-
-	message, err := ph.profileUsecase.UpdatePasswordProfile(&user, userPassword.OldPassword, userPassword.Password, int(userId))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"Message": message,
-			"Status":  http.StatusInternalServerError,
-		})
-	}
-
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"Message": "Password berhasil diubah",
-		"Status":  http.StatusOK,
-	})
-}
-
 func (ph *ProfileHandler) GetAllProvince(c echo.Context) error {
 	provinces, err := ph.profileUsecase.GetAllProvince()
 	if err != nil {

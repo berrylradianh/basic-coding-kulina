@@ -2,10 +2,7 @@ package auth
 
 import (
 	"errors"
-	"math/rand"
-	"time"
 
-	fp "basic-coding-kulina/helper/forgotpassword"
 	pw "basic-coding-kulina/helper/password"
 	vld "basic-coding-kulina/helper/validator"
 	"basic-coding-kulina/middleware/jwt"
@@ -58,95 +55,4 @@ func (ac *authUsecase) Login(request *ue.LoginRequest) (interface{}, string, err
 	response.Token = token
 
 	return response, role, nil
-}
-
-func (ac *authUsecase) ForgotPassword(request ue.ForgotPassRequest) (string, error) {
-
-	if err := vld.Validation(request); err != nil {
-		return "", err
-	}
-
-	user, err := ac.authRepo.GetUserByEmail(request.Email)
-	if err != nil {
-		return "", errors.New("Email tidak ditemukan")
-	}
-
-	if user.RoleId == "419a8a2d-0abe-4413-ac49-39d33cf9838d" {
-		return "", errors.New("Tidak diperbolehkan merubah data admin")
-	}
-
-	var alphaNumRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
-	codeVerRandRune := make([]rune, 6)
-	for i := 0; i < 6; i++ {
-		codeVerRandRune[i] = alphaNumRunes[rand.Intn(len(alphaNumRunes)-1)]
-	}
-	codeVerPassword := string(codeVerRandRune)
-
-	_, err = ac.authRepo.GetUserRecovery(user.ID)
-	if err != nil {
-		err = ac.authRepo.UserRecovery(user.ID, codeVerPassword)
-		if err != nil {
-			return "", err
-		}
-	} else {
-		err = ac.authRepo.UpdateUserRecovery(user.ID, codeVerPassword)
-		if err != nil {
-			return "", err
-		}
-	}
-
-	err = fp.ForgotPassword(request.Email, codeVerPassword)
-	if err != nil {
-		return "", err
-	}
-
-	return user.Email, nil
-}
-func (ac *authUsecase) VerifOtp(request ue.VerifOtp) error {
-	if err := vld.Validation(request); err != nil {
-		return err
-	}
-	user, err := ac.authRepo.GetUserByEmail(request.Email)
-	if err != nil {
-		return errors.New("Email tidak ditemukan")
-	}
-	userRecovery, err := ac.authRepo.GetUserRecovery(user.ID)
-	if err != nil {
-		return errors.New("Kode verifikasi tidak ditemukan")
-	}
-
-	expTime := userRecovery.CreatedAt.Add(15 * time.Minute)
-
-	if !time.Now().Before(expTime) {
-		return errors.New("Kode otp kadaluarsa")
-	}
-
-	if request.CodeOtp != userRecovery.Code {
-		return errors.New("Kode verifikasi salah")
-	}
-	return nil
-}
-func (ac *authUsecase) ChangePassword(request ue.RecoveryRequest) error {
-	if err := vld.Validation(request); err != nil {
-		return err
-	}
-	user, err := ac.authRepo.GetUserByEmail(request.Email)
-	if err != nil {
-		return errors.New("Email tidak ditemukan")
-	}
-
-	hashedPassword, err := pw.HashPassword(request.Password)
-	if err != nil {
-		return err
-	}
-	request.Password = string(hashedPassword)
-	err = ac.authRepo.ChangePassword(request)
-	if err != nil {
-		return err
-	}
-	err = ac.authRepo.DeleteUserRecovery(user.ID)
-	if err != nil {
-		return err
-	}
-	return nil
 }

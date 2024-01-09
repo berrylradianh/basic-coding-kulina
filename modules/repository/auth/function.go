@@ -5,6 +5,8 @@ import (
 
 	re "basic-coding-kulina/modules/entity/role"
 	ue "basic-coding-kulina/modules/entity/user"
+
+	"github.com/google/uuid"
 )
 
 func (ar *authRepo) GetUserByEmail(email string) (*ue.User, error) {
@@ -56,88 +58,23 @@ func (ar *authRepo) CreateUser(user *ue.RegisterRequest) error {
 		return err
 	}
 
+	UserID := uuid.New().String()
+
 	userTable := ue.User{
-		RoleId:   role.Role,
+		ID:       UserID,
+		RoleId:   role.ID,
 		Email:    user.Email,
 		Username: user.Username,
 		Password: user.Password,
 		UserDetail: ue.UserDetail{
-			Name:  user.Name,
-			Phone: user.Phone,
+			UserId: UserID,
+			Name:   user.Name,
+			Phone:  user.Phone,
 		},
 	}
 
 	if err := ar.db.Create(&userTable).Error; err != nil {
 		return err
 	}
-	return nil
-}
-func (ar *authRepo) GetUserRecovery(userId string) (ue.UserRecovery, error) {
-	var recovery ue.UserRecovery
-	err := ar.db.Where("user_id = ?", userId).First(&recovery).Error
-	if err != nil {
-		return recovery, errors.New("Record Not Found")
-	}
-
-	return recovery, nil
-}
-
-func (ar *authRepo) UserRecovery(userId string, codeVer string) error {
-
-	userRecover := ue.UserRecovery{
-		UserId: userId,
-		Code:   codeVer,
-	}
-	if err := ar.db.Create(&userRecover).Error; err != nil {
-		return err
-	}
-
-	return nil
-}
-func (ar *authRepo) UpdateUserRecovery(userId string, codeVer string) error {
-
-	userRecover := ue.UserRecovery{
-		UserId: userId,
-		Code:   codeVer,
-	}
-	result := ar.db.Model(&ue.UserRecovery{}).Where("user_id = ?", userId).Updates(&userRecover)
-
-	if err := result.Error; err != nil {
-		return err
-	}
-
-	if result.RowsAffected < 1 {
-		return errors.New("nothing has changed")
-	}
-
-	return nil
-}
-func (ar *authRepo) ChangePassword(user ue.RecoveryRequest) error {
-
-	result := ar.db.Model(&ue.User{}).Where("email = ?", user.Email).Update("password", user.Password)
-
-	if err := result.Error; err != nil {
-		return err
-	}
-
-	if result.RowsAffected < 1 {
-		return errors.New("nothing has changed")
-	}
-
-	return nil
-}
-func (ar *authRepo) DeleteUserRecovery(userId string) error {
-
-	var userRecovery ue.UserRecovery
-	result := ar.db.Where("user_id = ?", userId).Delete(&userRecovery)
-
-	if err := result.Error; err != nil {
-		return err
-	}
-
-	if result.RowsAffected < 1 {
-		return errors.New("nothing has changed")
-	}
-
 	return nil
 }

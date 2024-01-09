@@ -18,7 +18,6 @@ type User struct {
 	Password      string           `json:"Password" form:"Password" validate:"required,min=8"`
 	UserDetail    UserDetail       `gorm:"foreignKey:UserId"`
 	UserAddresses []UserAddress    `gorm:"foreignKey:UserId"`
-	UserRecovery  UserRecovery     `gorm:"foreignKey:UserId" json:"-"`
 	Transactions  []et.Transaction `gorm:"foreignKey:UserId"`
 }
 
@@ -72,10 +71,4 @@ type UserResponse struct {
 	Point        uint   `json:"Point"`
 	ProfilePhoto string `json:"ProfilePhoto"`
 	Addresses    []UserAddressResponse
-}
-
-type UserPasswordRequest struct {
-	OldPassword        string `json:"OldPassword" form:"OldPassword" validate:"required"`
-	Password           string `json:"Password" form:"Password" validate:"required"`
-	ConfirmNewPassword string `json:"ConfirmNewPassword" form:"ConfirmNewPassword" validate:"required"`
 }
