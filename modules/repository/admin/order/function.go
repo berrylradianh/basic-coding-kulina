@@ -80,7 +80,7 @@ func (or *orderRepo) SearchOrder(search, filter string, offset, pageSize int) (*
 	}
 
 	if err := or.db.Model(&te.Transaction{}).
-		Select("transactions.receipt_number AS ReceiptNumber, transactions.transaction_id AS TransactionId, user_details.name AS Name, (SELECT COUNT(*) FROM transaction_details WHERE transaction_details.transaction_id = transactions.id) AS Unit, total_price AS TotalPrice, transactions.created_at AS OrderDate, status_transaction AS StatusTransaction").
+		Select("*, (SELECT COUNT(*) FROM transaction_details WHERE transaction_details.transaction_id = transactions.id) AS Unit").
 		Joins("JOIN transaction_details ON transaction_details.transaction_id = transactions.id").
 		Joins("JOIN users ON transactions.user_id = users.id").
 		Joins("JOIN user_details ON users.id = user_details.user_id").

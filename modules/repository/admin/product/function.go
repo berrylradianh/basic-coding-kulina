@@ -68,7 +68,7 @@ func (pr *productRepo) GetProductByID(productId string, product *pe.Product) (*p
 	err := pr.db.Model(&te.Transaction{}).
 		Select("COALESCE(SUM(transaction_details.qty),0) AS TotalOrder").
 		Joins("JOIN transaction_details ON transactions.id = transaction_details.transaction_id").
-		Joins("JOIN products ON products.product_id = transaction_details.product_id").
+		Joins("JOIN products ON products.id = transaction_details.product_id").
 		Where("transactions.canceled_reason = ''").
 		Where("transaction_details.product_id = ?", productId).
 		Preload("ProductImages").
@@ -80,7 +80,7 @@ func (pr *productRepo) GetProductByID(productId string, product *pe.Product) (*p
 	err = pr.db.Model(&te.Transaction{}).
 		Select("COALESCE(SUM(transaction_details.sub_total_price),0) AS TotalRevenue").
 		Joins("JOIN transaction_details ON transactions.id = transaction_details.transaction_id").
-		Joins("JOIN products ON products.product_id = transaction_details.product_id").
+		Joins("JOIN products ON products.id = transaction_details.product_id").
 		Where("transactions.canceled_reason = ''").
 		Where("transaction_details.product_id = ?", productId).
 		Preload("ProductImages").
@@ -91,7 +91,7 @@ func (pr *productRepo) GetProductByID(productId string, product *pe.Product) (*p
 
 	if err = pr.db.
 		Preload("ProductCategory").Preload("ProductImages").
-		Where("product_id = ?", productId).
+		Where("id = ?", productId).
 		First(&product).Error; err != nil {
 		return product, 0, 0, echo.NewHTTPError(404, err)
 	}
@@ -155,7 +155,7 @@ func (pr *productRepo) SearchProduct(search, filter string, offset, pageSize int
 	var count int64
 
 	if err := pr.db.Model(&pe.Product{}).
-		Where("name LIKE ? OR product_id LIKE ? OR product_category_id IN (?)",
+		Where("name LIKE ? OR id LIKE ? OR product_category_id IN (?)",
 			"%"+search+"%",
 			"%"+search+"%",
 			pr.db.Model(&pe.ProductCategory{}).Select("id").Where("category LIKE ?", "%"+search+"%")).
@@ -166,7 +166,7 @@ func (pr *productRepo) SearchProduct(search, filter string, offset, pageSize int
 	}
 
 	if err := pr.db.Model(&pe.Product{}).
-		Where("name LIKE ? OR product_id LIKE ? OR product_category_id IN (?)",
+		Where("name LIKE ? OR id LIKE ? OR product_category_id IN (?)",
 			"%"+search+"%",
 			"%"+search+"%",
 			pr.db.Model(&pe.ProductCategory{}).Select("id").Where("category LIKE ?", "%"+search+"%")).
