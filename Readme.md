@@ -44,14 +44,17 @@ Basic coding, REST API test using Golang make a design system and transaction fl
     ```
 3. Configure environment variables for database connection
     ```
-   APP_PORT="${APP_PORT}"
-   DB_CONNECTION="${DB_CONNECTION}"
-   DB_HOST="${DB_HOST}"
-   DB_PORT="${DB_PORT}"
-   DB_NAME="${DB_NAME}"
-   DB_USERNAME="${DB_USERNAME}"
-   DB_PASSWORD="${DB_PASSWORD}"
-   SECRET_KEY="${SECRET_KEY}"
+    APP_PORT="${APP_PORT}"
+    DB_CONNECTION="${DB_CONNECTION}"
+    DB_HOST="${DB_HOST}"
+    DB_PORT="${DB_PORT}"
+    DB_NAME="${DB_NAME}"
+    DB_USERNAME="${DB_USERNAME}"
+    DB_PASSWORD="${DB_PASSWORD}"
+    SECRET_KEY="${SECRET_KEY}"
+    RAJAONGKIR_KEY="${RAJAONGKIR_KEY}"
+    MIDTRANS_SERVER_KEY="${MIDTRANS_SERVER_KEY}"
+    BINDERBYTE_KEY="${BINDERBYTE_KEY}"
     ```
 
 4.  Run the application
