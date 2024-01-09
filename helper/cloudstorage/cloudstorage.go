@@ -1,24 +1,19 @@
 package cloudstorage
 
 import (
-	"context"
 	"io"
 	"mime/multipart"
 	"net/url"
 	"os"
 	"path"
 	"path/filepath"
-
-	"cloud.google.com/go/storage"
-	"github.com/labstack/echo/v4"
-	"google.golang.org/api/option"
 )
 
 var Folder string
 var FolderVideo string
 
 func UploadToLocalPath(fileHeader *multipart.FileHeader) (string, error) {
-	uploadPath := "./assets/upload/"
+	uploadPath := "./assets/uploads/"
 	err := os.MkdirAll(uploadPath, os.ModePerm)
 	if err != nil {
 		return "", err
@@ -55,22 +50,12 @@ func GetFileName(filePath string) string {
 	return fileName
 }
 
-func DeleteImage(fileName string) error {
-	ctx := context.Background()
-	client, err := storage.NewClient(ctx, option.WithCredentialsFile("storage.json"))
-	if err != nil {
-		return echo.NewHTTPError(500, err)
-	}
+func DeleteLocalImage(fileName string) error {
+	uploadPath := "./assets/uploads/"
 
-	bucketName := "ecowave"
-	objectPath := Folder + fileName
+	filePath := filepath.Join(uploadPath, fileName)
 
-	obj := client.Bucket(bucketName).Object(objectPath)
-
-	err = obj.Delete(ctx)
-	if err != nil {
-		return echo.NewHTTPError(500, "Gagal menghapus file pada cloud storage")
-	}
+	os.Remove(filePath)
 
 	return nil
 }

@@ -3,11 +3,13 @@ package product
 import (
 	pe "basic-coding-kulina/modules/entity/product"
 	te "basic-coding-kulina/modules/entity/transaction"
+	"fmt"
 
 	"github.com/labstack/echo/v4"
 )
 
 func (pr *productRepo) CreateProduct(product *pe.Product) error {
+	fmt.Println(product.ProductCategoryId)
 	if err := pr.db.Save(&product).Error; err != nil {
 		return echo.NewHTTPError(500, err)
 	}
@@ -17,7 +19,7 @@ func (pr *productRepo) CreateProduct(product *pe.Product) error {
 
 func (pr *productRepo) CheckProductExist(productId string) (bool, error) {
 	var count int64
-	result := pr.db.Model(&pe.Product{}).Where("product_id = ?", productId).Count(&count)
+	result := pr.db.Model(&pe.Product{}).Where("id = ?", productId).Count(&count)
 	if result.Error != nil {
 		return false, echo.NewHTTPError(500, result.Error)
 	}
@@ -100,7 +102,7 @@ func (pr *productRepo) GetProductByID(productId string, product *pe.Product) (*p
 }
 
 func (pr *productRepo) UpdateProduct(productId string, req *pe.ProductRequest) error {
-	if err := pr.db.Model(&pe.Product{}).Where("product_id = ?", productId).Updates(pe.Product{ProductCategoryId: req.ProductCategoryId, Name: req.Name, Price: req.Price, Status: req.Status, Description: req.Description}).Error; err != nil {
+	if err := pr.db.Model(&pe.Product{}).Where("id = ?", productId).Updates(pe.Product{ProductCategoryId: req.ProductCategoryId, Name: req.Name, Price: req.Price, Status: req.Status, Description: req.Description}).Error; err != nil {
 		return echo.NewHTTPError(500, err)
 	}
 
@@ -108,7 +110,7 @@ func (pr *productRepo) UpdateProduct(productId string, req *pe.ProductRequest) e
 }
 
 func (pr *productRepo) UpdateProductStock(productId string, stock uint) error {
-	if err := pr.db.Exec("UPDATE products SET stock = ? WHERE product_id = ?", stock, productId).Error; err != nil {
+	if err := pr.db.Exec("UPDATE products SET stock = ? WHERE id = ?", stock, productId).Error; err != nil {
 		return echo.NewHTTPError(500, err)
 	}
 
@@ -143,7 +145,7 @@ func (pr *productRepo) DeleteProduct(productId string, product *pe.Product) erro
 	}
 
 	// Hapus produk dari tabel products
-	if err := pr.db.Where("product_id = ?", productId).Delete(&product).Error; err != nil {
+	if err := pr.db.Where("id = ?", productId).Delete(&product).Error; err != nil {
 		return echo.NewHTTPError(500, err)
 	}
 

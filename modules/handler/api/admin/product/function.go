@@ -3,7 +3,6 @@ package product
 import (
 	"fmt"
 	"math"
-	"os"
 
 	"mime/multipart"
 	"net/http"
@@ -16,6 +15,7 @@ import (
 	vld "basic-coding-kulina/helper/validator"
 	ep "basic-coding-kulina/modules/entity/product"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
@@ -208,7 +208,7 @@ func (h *ProductHandler) CreateProduct(c echo.Context) error {
 			"Status":  http.StatusBadRequest,
 		})
 	} else {
-		product.ID = productCategoryID
+		product.ProductCategoryId = productCategoryID
 	}
 
 	name := c.FormValue("Name")
@@ -324,7 +324,8 @@ func (h *ProductHandler) CreateProduct(c echo.Context) error {
 
 			PhotoPath, err := cloudstorage.UploadToLocalPath(fileHeader)
 			productImage := ep.ProductImage{
-				ID:              product.ID,
+				ID:              uuid.New().String(),
+				ProductId:       product.ID,
 				ProductImageUrl: PhotoPath,
 			}
 			err = h.productUseCase.CreateProductImage(&productImage)
@@ -469,19 +470,6 @@ func (h *ProductHandler) UpdateProduct(c echo.Context) error {
 	for i := 1; i <= nProductImage; i++ {
 		fileHeader, _ = c.FormFile(fmt.Sprintf("PhotoContentUrl%d", i))
 		if fileHeader != nil {
-			if productBefore.ProductImages[i-1].ProductImageUrl != "" {
-				// Assuming the file name can be extracted from the URL; adjust accordingly
-				fileName := filepath.Base(productBefore.ProductImages[i-1].ProductImageUrl)
-				filePath := filepath.Join(cloudstorage.Folder, fileName)
-
-				err := os.Remove(filePath)
-				if err != nil {
-					return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-						"Message": "Gagal menghapus file lokal",
-					})
-				}
-			}
-
 			if err := vld.ValidateFileExtension(fileHeader); err != nil {
 				return err
 			}
@@ -525,7 +513,6 @@ func (h *ProductHandler) DeleteProduct(c echo.Context) error {
 		})
 	}
 
-	cloudstorage.Folder = "img/products/"
 	for _, image := range product.ProductImages {
 		filename := cloudstorage.GetFileName(image.ProductImageUrl)
 		if err != nil {
@@ -533,10 +520,10 @@ func (h *ProductHandler) DeleteProduct(c echo.Context) error {
 				"Message": "Gagal mendapatkan nama file",
 			})
 		}
-		err = cloudstorage.DeleteImage(filename)
+		err = cloudstorage.DeleteLocalImage(filename)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, echo.Map{
-				"Message": "Gagal menghapus file pada cloud storage",
+				"Message": "Gagal menghapus file lokal",
 				"Status":  http.StatusInternalServerError,
 			})
 		}

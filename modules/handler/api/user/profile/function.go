@@ -149,7 +149,7 @@ func (ph *ProfileHandler) UpdateUserProfile(c echo.Context) error {
 					"Message": "Gagal mendapatkan nama file",
 				})
 			}
-			err := cloudstorage.DeleteImage(fileName)
+			err := cloudstorage.DeleteLocalImage(fileName)
 			if err != nil {
 				return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 					"Message": "Gagal menghapus file pada cloud storage",
