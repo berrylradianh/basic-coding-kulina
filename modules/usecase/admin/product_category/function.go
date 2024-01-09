@@ -21,12 +21,12 @@ func (pcc *productCategoryUsecase) CreateProductCategory(productCategory *pe.Pro
 	return available, pcc.productCategoryRepo.CreateProductCategory(productCategory)
 }
 
-func (pcc *productCategoryUsecase) UpdateProductCategory(productCategory *pe.ProductCategory, id int) (bool, error) {
+func (pcc *productCategoryUsecase) UpdateProductCategory(productCategory *pe.ProductCategory, id string) (bool, error) {
 	available, _ := pcc.productCategoryRepo.IsProductCategoryAvailable(productCategory, productCategory.Category)
 	return available, pcc.productCategoryRepo.UpdateProductCategory(productCategory, id)
 }
 
-func (pcc *productCategoryUsecase) DeleteProductCategory(productCategory *pe.ProductCategory, id int) error {
+func (pcc *productCategoryUsecase) DeleteProductCategory(productCategory *pe.ProductCategory, id string) error {
 	return pcc.productCategoryRepo.DeleteProductCategory(productCategory, id)
 }
 
@@ -35,7 +35,7 @@ func (pcc *productCategoryUsecase) GetAllProductCategoryNoPagination() (*[]pe.Pr
 	return productCategories, err
 }
 
-func (pcc *productCategoryUsecase) GetProductCategoryById(id int) (*pe.ProductCategory, error) {
+func (pcc *productCategoryUsecase) GetProductCategoryById(id string) (*pe.ProductCategory, error) {
 	productCategories, err := pcc.productCategoryRepo.GetProductCategoryById(id)
 	return productCategories, err
 }

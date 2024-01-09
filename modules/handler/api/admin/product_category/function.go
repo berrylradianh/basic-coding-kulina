@@ -86,15 +86,9 @@ func (pch *ProductCategoryHandler) CreateProductCategory(c echo.Context) error {
 func (pch *ProductCategoryHandler) UpdateProductCategory(c echo.Context) error {
 	var productCategory pe.ProductCategory
 
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"Message": "ID harus berupa angka",
-			"Status":  http.StatusBadRequest,
-		})
-	}
+	id := c.Param("id")
 
-	_, err = pch.productCategoryUsecase.GetProductCategoryById(id)
+	_, err := pch.productCategoryUsecase.GetProductCategoryById(id)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, echo.Map{
 			"Message": err.Error(),
@@ -140,15 +134,9 @@ func (pch *ProductCategoryHandler) UpdateProductCategory(c echo.Context) error {
 func (pch *ProductCategoryHandler) DeleteProductCategory(c echo.Context) error {
 	var productCategory pe.ProductCategory
 
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"Message": "ID harus berupa angka",
-			"Status":  http.StatusBadRequest,
-		})
-	}
+	id := c.Param("id")
 
-	_, err = pch.productCategoryUsecase.GetProductCategoryById(id)
+	_, err := pch.productCategoryUsecase.GetProductCategoryById(id)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusNotFound, map[string]interface{}{
 			"Message": err.Error(),

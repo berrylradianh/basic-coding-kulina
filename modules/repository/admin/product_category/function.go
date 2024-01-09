@@ -16,7 +16,7 @@ func (pcr *productCategoryRepo) CreateProductCategory(productCategory *pe.Produc
 	return nil
 }
 
-func (pcr *productCategoryRepo) UpdateProductCategory(productCategory *pe.ProductCategory, id int) error {
+func (pcr *productCategoryRepo) UpdateProductCategory(productCategory *pe.ProductCategory, id string) error {
 	if err := pcr.db.Where("id = ?", id).Updates(&productCategory).Error; err != nil {
 		return echo.NewHTTPError(500, err)
 	}
@@ -24,7 +24,7 @@ func (pcr *productCategoryRepo) UpdateProductCategory(productCategory *pe.Produc
 	return nil
 }
 
-func (pcr *productCategoryRepo) DeleteProductCategory(productCategory *pe.ProductCategory, id int) error {
+func (pcr *productCategoryRepo) DeleteProductCategory(productCategory *pe.ProductCategory, id string) error {
 	var count int64
 	if err := pcr.db.Table("products").Where("product_category_id = ?", id).Count(&count).Error; err != nil {
 		return echo.NewHTTPError(500, err)
@@ -50,7 +50,7 @@ func (pcr *productCategoryRepo) GetAllProductCategoryNoPagination() (*[]pe.Produ
 	return &productCategories, nil
 }
 
-func (pcr *productCategoryRepo) GetProductCategoryById(id int) (*pe.ProductCategory, error) {
+func (pcr *productCategoryRepo) GetProductCategoryById(id string) (*pe.ProductCategory, error) {
 	var productCategory pe.ProductCategory
 	if err := pcr.db.Where("id = ?", id).Preload("Products").First(&productCategory).Error; err != nil {
 		return nil, echo.NewHTTPError(404, err)
