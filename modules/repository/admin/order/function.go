@@ -24,7 +24,7 @@ func (or *orderRepo) GetAllOrder(transactions *[]te.TransactionResponse, offset,
 	}
 
 	if err := or.db.Model(&te.Transaction{}).
-		Select("transactions.receipt_number AS ReceiptNumber, transactions.transaction_id AS TransactionId, user_details.name AS Name, (SELECT COUNT(*) FROM transaction_details WHERE transaction_details.transaction_id = transactions.id) AS Unit, total_price AS TotalPrice, transactions.created_at AS OrderDate, status_transaction AS StatusTransaction").
+		Select("*,(SELECT COUNT(*) FROM transaction_details WHERE transaction_details.transaction_id = transactions.id) AS Unit").
 		Joins("JOIN transaction_details ON transaction_details.transaction_id = transactions.id").
 		Joins("JOIN users ON transactions.user_id = users.id").
 		Joins("JOIN user_details ON users.id = user_details.user_id").
@@ -39,9 +39,7 @@ func (or *orderRepo) GetAllOrder(transactions *[]te.TransactionResponse, offset,
 
 func (or *orderRepo) GetOrderByID(transactionId string, transaction *te.TransactionDetailResponse) (te.TransactionDetailResponse, error) {
 	if err := or.db.Model(&te.Transaction{}).
-		Select("user_addresses.address AS Address, voucher_types.type AS Voucher, user_details.name AS Name, user_addresses.phone AS PhoneNumber, receipt_number AS ReceiptNumber, total_product_price AS TotalProductPrice, total_shipping_price AS TotalShippingPrice, total_price AS TotalPrice, transactions.point AS Point, payment_method AS PaymentMethod, payment_status AS PaymentStatus, canceled_reason AS CanceledReason, expedition_rating AS ExpeditionRating, expedition_name AS ExpeditionName, status_transaction AS StatusTransaction, transactions.created_at AS CreatedAt, transactions.updated_at AS UpdatedAt").
-		Joins("JOIN vouchers ON vouchers.id = transactions.voucher_id").
-		Joins("JOIN voucher_types ON  voucher_types.id = vouchers.voucher_type_id").
+		Select("*").
 		Joins("JOIN users ON  users.id = transactions.user_id").
 		Joins("JOIN user_details ON users.id = user_details.user_id").
 		Joins("JOIN user_addresses ON transactions.address_id = user_addresses.id").
@@ -59,8 +57,8 @@ func (or *orderRepo) GetOrderProducts(transactionId string, products *[]te.Trans
 	}
 
 	if err := or.db.Model(&te.TransactionDetail{}).
-		Select("products.name AS ProductName, (SELECT product_image_url FROM product_images WHERE product_id = transaction_details.product_id LIMIT 1) AS ProductImageUrl, transaction_details.qty AS Qty").
-		Joins("JOIN products ON products.product_id = transaction_details.product_id").
+		Select("*").
+		Joins("JOIN products ON products.id = transaction_details.product_id").
 		Where("transaction_details.transaction_id = ?", transaction.ID).Scan(&products).Error; err != nil {
 		return nil, err
 	}

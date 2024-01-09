@@ -7,10 +7,12 @@ import (
 )
 
 type Transaction struct {
-	*gorm.Model
-
-	UserId             string `validate:"required"`
-	AddressId          string `json:"AddressId" form:"AddressId" validate:"required"`
+	ID                 string `gorm:"type:text;primaryKey"`
+	CreatedAt          time.Time
+	UpdatedAt          time.Time
+	DeletedAt          gorm.DeletedAt `gorm:"index"`
+	UserId             string         `validate:"required"`
+	AddressId          string         `json:"AddressId" form:"AddressId" validate:"required"`
 	StatusTransaction  string
 	ReceiptNumber      string
 	TransactionId      string  `validate:"required"`
@@ -42,7 +44,6 @@ type TransactionResponse struct {
 type TransactionDetailResponse struct {
 	Address            string
 	Name               string
-	PhoneNumber        string
 	ReceiptNumber      string
 	TotalProductPrice  float64
 	TotalShippingPrice float64
@@ -59,7 +60,6 @@ type TransactionDetailResponse struct {
 }
 
 type TransactionProductDetailResponse struct {
-	ProductName     string
-	ProductImageUrl string
-	Qty             string
+	ProductName string
+	Qty         string
 }

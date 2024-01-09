@@ -2,11 +2,15 @@ package seed
 
 import (
 	et "basic-coding-kulina/modules/entity/transaction"
+	"time"
 )
 
 func CreateTransaction() []*et.Transaction {
 	transaction := []*et.Transaction{
 		{
+			ID:                 "1b25566d-f99c-4f2a-bd42-83c00e1b5a39",
+			CreatedAt:          time.Now(),
+			UpdatedAt:          time.Now(),
 			UserId:             "c7668a02-f1bd-4ebb-bf30-aaeebfedc16b",
 			AddressId:          "414354cc-45a5-47f6-879e-bfb4476eb0d6",
 			StatusTransaction:  "Belum Bayar",
@@ -26,6 +30,9 @@ func CreateTransaction() []*et.Transaction {
 			CanceledReason:     "",
 		},
 		{
+			ID:                 "c4cc586e-bade-4918-8205-abdead811e1a",
+			CreatedAt:          time.Now(),
+			UpdatedAt:          time.Now(),
 			UserId:             "c7668a02-f1bd-4ebb-bf30-aaeebfedc16b",
 			AddressId:          "414354cc-45a5-47f6-879e-bfb4476eb0d6",
 			StatusTransaction:  "Selesai",
@@ -45,6 +52,9 @@ func CreateTransaction() []*et.Transaction {
 			CanceledReason:     "",
 		},
 		{
+			ID:                 "1cad50aa-0f0e-4b85-b270-660a2c76fa96",
+			CreatedAt:          time.Now(),
+			UpdatedAt:          time.Now(),
 			UserId:             "c7668a02-f1bd-4ebb-bf30-aaeebfedc16b",
 			AddressId:          "414354cc-45a5-47f6-879e-bfb4476eb0d6",
 			StatusTransaction:  "Dikemas",
@@ -64,6 +74,9 @@ func CreateTransaction() []*et.Transaction {
 			CanceledReason:     "",
 		},
 		{
+			ID:                 "159c6856-b7d9-44b0-b5cc-476813a6b388",
+			CreatedAt:          time.Now(),
+			UpdatedAt:          time.Now(),
 			UserId:             "c7668a02-f1bd-4ebb-bf30-aaeebfedc16b",
 			AddressId:          "414354cc-45a5-47f6-879e-bfb4476eb0d6",
 			StatusTransaction:  "Dikirim",
@@ -83,6 +96,9 @@ func CreateTransaction() []*et.Transaction {
 			CanceledReason:     "",
 		},
 		{
+			ID:                 "1829821b-19be-4957-a371-0ca5b494e1b6",
+			CreatedAt:          time.Now(),
+			UpdatedAt:          time.Now(),
 			UserId:             "c7668a02-f1bd-4ebb-bf30-aaeebfedc16b",
 			AddressId:          "414354cc-45a5-47f6-879e-bfb4476eb0d6",
 			StatusTransaction:  "Dibatalkan",
