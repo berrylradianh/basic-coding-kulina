@@ -12,7 +12,7 @@ func (pr *profileRepo) GetAllUserProfile(user *[]ut.User) error {
 	return nil
 }
 
-func (pr *profileRepo) GetUserProfile(user *ut.User, id int) error {
+func (pr *profileRepo) GetUserProfile(user *ut.User, id string) error {
 	if err := pr.db.Where("id = ?", id).Find(&user).Error; err != nil {
 		return err
 	}
@@ -20,7 +20,7 @@ func (pr *profileRepo) GetUserProfile(user *ut.User, id int) error {
 	return nil
 }
 
-func (pr *profileRepo) GetUserDetailProfile(userDetail *ut.UserDetail, id int) error {
+func (pr *profileRepo) GetUserDetailProfile(userDetail *ut.UserDetail, id string) error {
 	if err := pr.db.Raw("SELECT * FROM user_details WHERE user_id = ?", id).Scan(&userDetail).Error; err != nil {
 		return err
 	}
@@ -28,7 +28,7 @@ func (pr *profileRepo) GetUserDetailProfile(userDetail *ut.UserDetail, id int) e
 	return nil
 }
 
-func (pr *profileRepo) UpdateUserProfile(userRequest *ut.UserRequest, id int) error {
+func (pr *profileRepo) UpdateUserProfile(userRequest *ut.UserRequest, id string) error {
 	if err := pr.db.Raw("UPDATE users SET email = ?, username = ? WHERE id = ?", userRequest.Email, userRequest.Username, id).Scan(&userRequest).Error; err != nil {
 		return err
 	}
@@ -36,7 +36,7 @@ func (pr *profileRepo) UpdateUserProfile(userRequest *ut.UserRequest, id int) er
 	return nil
 }
 
-func (pr *profileRepo) UpdateUserDetailProfile(userDetailRequest *ut.UserDetailRequest, id int) error {
+func (pr *profileRepo) UpdateUserDetailProfile(userDetailRequest *ut.UserDetailRequest, id string) error {
 	if err := pr.db.Raw("UPDATE user_details SET name = ?, phone = ?, profile_photo = ? WHERE user_id = ?", userDetailRequest.Name, userDetailRequest.Phone, userDetailRequest.ProfilePhoto, id).Scan(&userDetailRequest).Error; err != nil {
 		return err
 	}
@@ -52,7 +52,7 @@ func (pr *profileRepo) CreateAddressProfile(address *ut.UserAddress) error {
 	return nil
 }
 
-func (pr *profileRepo) GetAllAddressProfileNoPagination(address *[]ut.UserAddress, idUser int) error {
+func (pr *profileRepo) GetAllAddressProfileNoPagination(address *[]ut.UserAddress, idUser string) error {
 	if err := pr.db.Where("user_id = ?", idUser).Find(&address).Error; err != nil {
 		return err
 	}
@@ -60,7 +60,7 @@ func (pr *profileRepo) GetAllAddressProfileNoPagination(address *[]ut.UserAddres
 	return nil
 }
 
-func (pr *profileRepo) GetAllAddressProfile(address *[]ut.UserAddress, idUser, offset, pageSize int) (*[]ut.UserAddress, int64, error) {
+func (pr *profileRepo) GetAllAddressProfile(address *[]ut.UserAddress, idUser string, offset, pageSize int) (*[]ut.UserAddress, int64, error) {
 	var count int64
 
 	if err := pr.db.Model(&address).Count(&count).Error; err != nil {
@@ -100,7 +100,7 @@ func (pr *profileRepo) UpdateAddressByIdProfile(addressRequest *ut.UserAddressRe
 	return nil
 }
 
-func (pr *profileRepo) UpdatePasswordProfile(newPassword string, id int) error {
+func (pr *profileRepo) UpdatePasswordProfile(newPassword string, id string) error {
 	var user *ut.User
 	if err := pr.db.Model(&user).Where("id = ?", id).Update("password", newPassword).Error; err != nil {
 		return err

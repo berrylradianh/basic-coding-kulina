@@ -7,19 +7,19 @@ import (
 
 type ProfileUsecase interface {
 	GetAllUserProfile(user *[]ut.User) error
-	GetUserProfile(user *ut.User, id int) error
-	GetUserDetailProfile(userDetail *ut.UserDetail, id int) error
-	UpdateUserProfile(userRequest *ut.UserRequest, id int) error
-	UpdateUserDetailProfile(userDetailRequest *ut.UserDetailRequest, id int) error
+	GetUserProfile(user *ut.User, id string) error
+	GetUserDetailProfile(userDetail *ut.UserDetail, id string) error
+	UpdateUserProfile(userRequest *ut.UserRequest, id string) error
+	UpdateUserDetailProfile(userDetailRequest *ut.UserDetailRequest, id string) error
 
 	CreateAddressProfile(address *ut.UserAddress) error
-	GetAllAddressProfileNoPagination(address *[]ut.UserAddress, idUser int) error
-	GetAllAddressProfile(address *[]ut.UserAddress, idUser, offset, pageSize int) (*[]ut.UserAddress, int64, error)
+	GetAllAddressProfileNoPagination(address *[]ut.UserAddress, idUser string) error
+	GetAllAddressProfile(address *[]ut.UserAddress, idUser string, offset, pageSize int) (*[]ut.UserAddress, int64, error)
 	GetAddressByIdProfile(address *ut.UserAddress, idUser string, idAddress int) error
 	UpdateAddressPrimaryProfile(address *ut.UserAddress, idUser string) error
 	UpdateAddressByIdProfile(addressRequest *ut.UserAddressRequest, idUser string, idAddress int) error
 
-	UpdatePasswordProfile(user *ut.User, oldPassword string, newPassword string, id int) (string, error)
+	UpdatePasswordProfile(user *ut.User, oldPassword string, newPassword string, id string) (string, error)
 
 	GetAllProvince() ([]ut.Province, error)
 	GetAllCityByProvince(provinceId string) ([]ut.City, error)

@@ -20,23 +20,23 @@ func (ph *ProfileHandler) GetUserProfile(c echo.Context) error {
 	var addressResponses []ut.UserAddressResponse
 
 	var claims = midjwt.GetClaims2(c)
-	var userId = claims["user_id"].(float64)
+	var userId = claims["user_id"].(string)
 
-	if err := ph.profileUsecase.GetUserProfile(&user, int(userId)); err != nil {
+	if err := ph.profileUsecase.GetUserProfile(&user, userId); err != nil {
 		return c.JSON(http.StatusNotFound, map[string]interface{}{
 			"Message": "Gagal mendapatkan profil",
 			"Status":  http.StatusNotFound,
 		})
 	}
 
-	if err := ph.profileUsecase.GetUserDetailProfile(&userDetail, int(userId)); err != nil {
+	if err := ph.profileUsecase.GetUserDetailProfile(&userDetail, userId); err != nil {
 		return c.JSON(http.StatusNotFound, map[string]interface{}{
 			"Message": "Gagal mendapatkan profil",
 			"Status":  http.StatusNotFound,
 		})
 	}
 
-	if err := ph.profileUsecase.GetAllAddressProfileNoPagination(&addresses, int(userId)); err != nil {
+	if err := ph.profileUsecase.GetAllAddressProfileNoPagination(&addresses, userId); err != nil {
 		return c.JSON(http.StatusNotFound, map[string]interface{}{
 			"Message": "Gagal mendapatkan alamat",
 			"Status":  http.StatusNotFound,
@@ -90,7 +90,7 @@ func (ph *ProfileHandler) UpdateUserProfile(c echo.Context) error {
 	var messagePhoto string
 
 	var claims = midjwt.GetClaims2(c)
-	var userId = claims["user_id"].(float64)
+	var userId = claims["user_id"].(string)
 
 	if err := ph.profileUsecase.GetAllUserProfile(&allUser); err != nil {
 		return c.JSON(http.StatusNotFound, map[string]interface{}{
@@ -99,21 +99,21 @@ func (ph *ProfileHandler) UpdateUserProfile(c echo.Context) error {
 		})
 	}
 
-	if err := ph.profileUsecase.GetUserProfile(&user, int(userId)); err != nil {
+	if err := ph.profileUsecase.GetUserProfile(&user, userId); err != nil {
 		return c.JSON(http.StatusNotFound, map[string]interface{}{
 			"Message": "Gagal mendapatkan profil",
 			"Status":  http.StatusNotFound,
 		})
 	}
 
-	if err := ph.profileUsecase.GetUserDetailProfile(&userDetail, int(userId)); err != nil {
+	if err := ph.profileUsecase.GetUserDetailProfile(&userDetail, userId); err != nil {
 		return c.JSON(http.StatusNotFound, map[string]interface{}{
 			"Message": "Gagal mendapatkan profil",
 			"Status":  http.StatusNotFound,
 		})
 	}
 
-	if err := ph.profileUsecase.GetUserDetailProfile(&userDetailBefore, int(userId)); err != nil {
+	if err := ph.profileUsecase.GetUserDetailProfile(&userDetailBefore, userId); err != nil {
 		return c.JSON(http.StatusNotFound, map[string]interface{}{
 			"Message": "Gagal mendapatkan profil",
 			"Status":  http.StatusNotFound,
@@ -124,7 +124,7 @@ func (ph *ProfileHandler) UpdateUserProfile(c echo.Context) error {
 	email := c.FormValue("Email")
 	username := c.FormValue("Username")
 	phone := c.FormValue("Phone")
-	fileHeader, err := c.FormFile("ProfilePhoto")
+	fileHeader, _ := c.FormFile("ProfilePhoto")
 
 	if name != "" {
 		userDetail.Name = name
@@ -140,23 +140,6 @@ func (ph *ProfileHandler) UpdateUserProfile(c echo.Context) error {
 	}
 
 	if fileHeader != nil {
-		cloudstorage.Folder = "img/users/profile/"
-
-		if userDetailBefore.ProfilePhoto != "" {
-			fileName := cloudstorage.GetFileName(userDetailBefore.ProfilePhoto)
-			if err != nil {
-				return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-					"Message": "Gagal mendapatkan nama file",
-				})
-			}
-			err := cloudstorage.DeleteLocalImage(fileName)
-			if err != nil {
-				return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-					"Message": "Gagal menghapus file pada cloud storage",
-				})
-			}
-		}
-
 		profilePhoto, _ := cloudstorage.UploadToLocalPath(fileHeader)
 		if profilePhoto == "" {
 			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
@@ -196,7 +179,7 @@ func (ph *ProfileHandler) UpdateUserProfile(c echo.Context) error {
 		return err
 	}
 
-	if err := ph.profileUsecase.UpdateUserProfile(&userRequest, int(userId)); err != nil {
+	if err := ph.profileUsecase.UpdateUserProfile(&userRequest, userId); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"Message": "Ups! Ada kendala saat mengubah profil kamu. Coba lagi ya",
 			"Status":  http.StatusInternalServerError,
@@ -205,7 +188,7 @@ func (ph *ProfileHandler) UpdateUserProfile(c echo.Context) error {
 		message = "Yey! Profil kamu berhasil diubah"
 	}
 
-	if err := ph.profileUsecase.UpdateUserDetailProfile(&userDetailRequest, int(userId)); err != nil {
+	if err := ph.profileUsecase.UpdateUserDetailProfile(&userDetailRequest, userId); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"Message": "Ups! Ada kendala saat mengubah profil kamu. Coba lagi ya",
 			"Status":  http.StatusInternalServerError,
@@ -287,7 +270,7 @@ func (ph *ProfileHandler) GetAllAddressProfile(c echo.Context) error {
 	var addressResponses []ut.UserAddressResponse
 
 	var claims = midjwt.GetClaims2(c)
-	var userId = claims["user_id"].(float64)
+	var userId = claims["user_id"].(string)
 
 	pageParam := c.QueryParam("page")
 	page, err := strconv.Atoi(pageParam)
@@ -298,7 +281,7 @@ func (ph *ProfileHandler) GetAllAddressProfile(c echo.Context) error {
 	pageSize := 10
 	offset := (page - 1) * pageSize
 
-	addresses, total, err := ph.profileUsecase.GetAllAddressProfile(addresses, int(userId), offset, pageSize)
+	addresses, total, err := ph.profileUsecase.GetAllAddressProfile(addresses, userId, offset, pageSize)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, map[string]interface{}{
 			"Message": "Gagal mendapatkan alamat",

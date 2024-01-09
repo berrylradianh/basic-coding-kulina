@@ -13,19 +13,19 @@ func (pc *profileUsecase) GetAllUserProfile(user *[]ut.User) error {
 	return pc.profileRepo.GetAllUserProfile(user)
 }
 
-func (pc *profileUsecase) GetUserProfile(user *ut.User, id int) error {
+func (pc *profileUsecase) GetUserProfile(user *ut.User, id string) error {
 	return pc.profileRepo.GetUserProfile(user, id)
 }
 
-func (pc *profileUsecase) GetUserDetailProfile(userDetail *ut.UserDetail, id int) error {
+func (pc *profileUsecase) GetUserDetailProfile(userDetail *ut.UserDetail, id string) error {
 	return pc.profileRepo.GetUserDetailProfile(userDetail, id)
 }
 
-func (pc *profileUsecase) UpdateUserProfile(userRequest *ut.UserRequest, id int) error {
+func (pc *profileUsecase) UpdateUserProfile(userRequest *ut.UserRequest, id string) error {
 	return pc.profileRepo.UpdateUserProfile(userRequest, id)
 }
 
-func (pc *profileUsecase) UpdateUserDetailProfile(userDetailRequest *ut.UserDetailRequest, id int) error {
+func (pc *profileUsecase) UpdateUserDetailProfile(userDetailRequest *ut.UserDetailRequest, id string) error {
 	return pc.profileRepo.UpdateUserDetailProfile(userDetailRequest, id)
 }
 
@@ -33,11 +33,11 @@ func (pc *profileUsecase) CreateAddressProfile(address *ut.UserAddress) error {
 	return pc.profileRepo.CreateAddressProfile(address)
 }
 
-func (pc *profileUsecase) GetAllAddressProfileNoPagination(address *[]ut.UserAddress, idUser int) error {
+func (pc *profileUsecase) GetAllAddressProfileNoPagination(address *[]ut.UserAddress, idUser string) error {
 	return pc.profileRepo.GetAllAddressProfileNoPagination(address, idUser)
 }
 
-func (pc *profileUsecase) GetAllAddressProfile(address *[]ut.UserAddress, idUser, offset, pageSize int) (*[]ut.UserAddress, int64, error) {
+func (pc *profileUsecase) GetAllAddressProfile(address *[]ut.UserAddress, idUser string, offset, pageSize int) (*[]ut.UserAddress, int64, error) {
 	return pc.profileRepo.GetAllAddressProfile(address, idUser, offset, pageSize)
 }
 
@@ -53,7 +53,7 @@ func (pc *profileUsecase) UpdateAddressByIdProfile(addressRequest *ut.UserAddres
 	return pc.profileRepo.UpdateAddressByIdProfile(addressRequest, idUser, idAddress)
 }
 
-func (pc *profileUsecase) UpdatePasswordProfile(user *ut.User, oldPassword string, newPassword string, id int) (string, error) {
+func (pc *profileUsecase) UpdatePasswordProfile(user *ut.User, oldPassword string, newPassword string, id string) (string, error) {
 	if err := p.VerifyPassword(user.Password, oldPassword); err != nil {
 		return "Password salah", err
 	}
