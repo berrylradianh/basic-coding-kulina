@@ -1,9 +1,9 @@
 package product
 
 import (
-	"context"
 	"fmt"
 	"math"
+	"os"
 
 	"mime/multipart"
 	"net/http"
@@ -296,7 +296,6 @@ func (h *ProductHandler) CreateProduct(c echo.Context) error {
 		})
 	}
 
-	cloudstorage.Folder = "img/products/"
 	photoUploaded := false
 	for i := 1; i <= 5; i++ {
 		fileHeader, err := c.FormFile(fmt.Sprintf("PhotoContentUrl%d", i))
@@ -323,11 +322,10 @@ func (h *ProductHandler) CreateProduct(c echo.Context) error {
 				})
 			}
 
-			PhotoUrl, _ := cloudstorage.UploadToBucket(c.Request().Context(), fileHeader)
-
+			PhotoPath, err := cloudstorage.UploadToLocalPath(fileHeader)
 			productImage := ep.ProductImage{
 				ID:              product.ID,
-				ProductImageUrl: PhotoUrl,
+				ProductImageUrl: PhotoPath,
 			}
 			err = h.productUseCase.CreateProductImage(&productImage)
 			if err != nil {
@@ -337,7 +335,6 @@ func (h *ProductHandler) CreateProduct(c echo.Context) error {
 					"Message": msg,
 				})
 			}
-
 		} else {
 			if err != nil {
 				i = 1000
@@ -473,16 +470,14 @@ func (h *ProductHandler) UpdateProduct(c echo.Context) error {
 		fileHeader, _ = c.FormFile(fmt.Sprintf("PhotoContentUrl%d", i))
 		if fileHeader != nil {
 			if productBefore.ProductImages[i-1].ProductImageUrl != "" {
-				fileName := cloudstorage.GetFileName(productBefore.ProductImages[i-1].ProductImageUrl)
+				// Assuming the file name can be extracted from the URL; adjust accordingly
+				fileName := filepath.Base(productBefore.ProductImages[i-1].ProductImageUrl)
+				filePath := filepath.Join(cloudstorage.Folder, fileName)
+
+				err := os.Remove(filePath)
 				if err != nil {
 					return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-						"Message": "Gagal mendapatkan nama file",
-					})
-				}
-				err := cloudstorage.DeleteImage(fileName)
-				if err != nil {
-					return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-						"Message": "Gagal menghapus file pada cloud storage",
+						"Message": "Gagal menghapus file lokal",
 					})
 				}
 			}
@@ -496,12 +491,13 @@ func (h *ProductHandler) UpdateProduct(c echo.Context) error {
 				return err
 			}
 
-			photoUrl, err := cloudstorage.UploadToBucket(context.Background(), fileHeader)
+			// Updated line to use local upload function
+			photoPath, err := cloudstorage.UploadToLocalPath(fileHeader)
 			if err != nil {
 				return err
 			}
 
-			if err := h.productUseCase.UpdateProductImage(i, productId, photoUrl); err != nil {
+			if err := h.productUseCase.UpdateProductImage(i, productId, photoPath); err != nil {
 				return c.JSON(http.StatusInternalServerError, echo.Map{
 					"Status":  http.StatusInternalServerError,
 					"Message": "fail update product image",

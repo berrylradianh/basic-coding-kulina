@@ -157,7 +157,7 @@ func (ph *ProfileHandler) UpdateUserProfile(c echo.Context) error {
 			}
 		}
 
-		profilePhoto, _ := cloudstorage.UploadToBucket(c.Request().Context(), fileHeader)
+		profilePhoto, _ := cloudstorage.UploadToLocalPath(fileHeader)
 		if profilePhoto == "" {
 			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 				"Message": "Ups! Foto profil gagal diunggah. Coba lagi ya",

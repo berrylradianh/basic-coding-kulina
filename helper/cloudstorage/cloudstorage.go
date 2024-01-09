@@ -2,11 +2,12 @@ package cloudstorage
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"mime/multipart"
 	"net/url"
+	"os"
 	"path"
+	"path/filepath"
 
 	"cloud.google.com/go/storage"
 	"github.com/labstack/echo/v4"
@@ -16,72 +17,32 @@ import (
 var Folder string
 var FolderVideo string
 
-func UploadToBucket(ctx context.Context, fileHeader *multipart.FileHeader) (string, error) {
-	bucket := "ecowave"
-
-	storageClient, err := storage.NewClient(ctx, option.WithCredentialsFile("storage.json"))
+func UploadToLocalPath(fileHeader *multipart.FileHeader) (string, error) {
+	uploadPath := "./assets/upload/"
+	err := os.MkdirAll(uploadPath, os.ModePerm)
 	if err != nil {
 		return "", err
 	}
 
 	file, err := fileHeader.Open()
 	if err != nil {
-		return "", echo.NewHTTPError(500, err)
+		return "", err
 	}
 	defer file.Close()
 
-	objectName := Folder + fileHeader.Filename
-	sw := storageClient.Bucket(bucket).Object(objectName).NewWriter(ctx)
-
-	if _, err := io.Copy(sw, file); err != nil {
-		return "", echo.NewHTTPError(500, err)
-	}
-
-	if err := sw.Close(); err != nil {
-		return "", echo.NewHTTPError(500, err)
-	}
-
-	u, err := url.Parse("/" + bucket + "/" + sw.Attrs().Name)
+	destination := filepath.Join(uploadPath, fileHeader.Filename)
+	out, err := os.Create(destination)
 	if err != nil {
-		return "", echo.NewHTTPError(500, err)
+		return "", err
 	}
+	defer out.Close()
 
-	PhotoUrl := fmt.Sprintf("https://storage.googleapis.com%s", u.EscapedPath())
-	return PhotoUrl, nil
-}
-
-func UploadVideoToBucket(ctx context.Context, videoHeader *multipart.FileHeader) (string, error) {
-	bucket := "ecowave"
-
-	storageClient, err := storage.NewClient(ctx, option.WithCredentialsFile("storage.json"))
+	_, err = io.Copy(out, file)
 	if err != nil {
-		return "", echo.NewHTTPError(500, err)
+		return "", err
 	}
 
-	file, err := videoHeader.Open()
-	if err != nil {
-		return "", echo.NewHTTPError(500, err)
-	}
-	defer file.Close()
-
-	objectName := FolderVideo + videoHeader.Filename
-	sw := storageClient.Bucket(bucket).Object(objectName).NewWriter(ctx)
-
-	if _, err := io.Copy(sw, file); err != nil {
-		return "", echo.NewHTTPError(500, err)
-	}
-
-	if err := sw.Close(); err != nil {
-		return "", echo.NewHTTPError(500, err)
-	}
-
-	u, err := url.Parse("/" + bucket + "/" + sw.Attrs().Name)
-	if err != nil {
-		return "", echo.NewHTTPError(500, err)
-	}
-
-	PhotoUrl := fmt.Sprintf("https://storage.googleapis.com%s", u.EscapedPath())
-	return PhotoUrl, nil
+	return destination, nil
 }
 
 func GetFileName(filePath string) string {
